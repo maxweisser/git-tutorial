@@ -152,6 +152,8 @@ void statemachine_callback(void) {
   printf("%s\nTotal count: %d\nIn state %d, state count: %d\n---------\n",
          states_get_state_name(), count, states_get_state_id() + 1,
          cur_data->cur_val);
+        
+        printf("");
 
   states_set_state(rand() %
                    states_get_state_count()); /** Switch to random next state */
