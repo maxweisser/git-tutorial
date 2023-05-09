@@ -23,6 +23,7 @@ int main(int argc, char* argv[])
         printf("\n");
         printf("Do you want to enter a new number?(enter 1 for yes or 0 for no) \n");
         scanf("%d", &y);
+        printf("");
 
     }
     
