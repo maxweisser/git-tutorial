@@ -97,6 +97,7 @@ void timer_callback(union sigval arg) {
   error = pthread_mutex_lock(&mutex);
   if (error != 0)
     err_abort(error, "Callback locking");
+    printf("");
 
   states_run();
 
