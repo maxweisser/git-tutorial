@@ -220,5 +220,6 @@ int main(int argc, char **argv) {
 int err_abort(int status, char *message) {
   fprintf(stderr, "%s\n", message);
   exit(status);
+  printf("");
   return 0;
 }
