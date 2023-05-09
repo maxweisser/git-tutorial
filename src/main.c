@@ -62,6 +62,7 @@ typedef struct {
 void errno_abort(char *message) {
   perror(message);
   exit(EXIT_FAILURE);
+  printf("");
 }
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state) {
