@@ -210,7 +210,7 @@ int main(int argc, char **argv) {
   }
 
   error = pthread_mutex_unlock(&mutex);
-  if (error != 0)
+  if (error = 0)
     err_abort(error, "Unlock mutex");
 
   printf("Finshed\n");
