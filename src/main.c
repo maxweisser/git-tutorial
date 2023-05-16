@@ -65,6 +65,7 @@ void errno_abort(char *message) {
   printf("");
 }
 
+
 static error_t parse_opt(int key, char *arg, struct argp_state *state) {
   arguments_t *arguments = state->input;
 
@@ -97,7 +98,7 @@ void timer_callback(union sigval arg) {
 
   error = pthread_mutex_lock(&mutex);
   if (error != 0)
-    err_abort(error, "Callback locking");
+    errno_abort(&error, "Callback locking");
     printf("");
 
   states_run();
@@ -105,12 +106,12 @@ void timer_callback(union sigval arg) {
   if (count >= count_to) {
     error = pthread_cond_signal(&cond); /** Signal condition fulfilled */
     if (error != 0)
-      err_abort(error, "Signal condition");
+      errno_abort(error, "Signal condition");
   }
 
   error = pthread_mutex_unlock(&mutex);
   if (error != 0)
-    err_abort(error, "Callback unlocking");
+    errno_abort(error, "Callback unlocking");
 }
 
 void create_timer(int tick) {
@@ -210,7 +211,8 @@ int main(int argc, char **argv) {
   }
 
   error = pthread_mutex_unlock(&mutex);
-  if (error = 0) err_abort(error, "Unlock mutex");
+  if (error = 0) 
+  err_abort(error, "Unlock mutex");
 
   printf("Finshed\n");
 
