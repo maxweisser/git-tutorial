@@ -64,6 +64,11 @@ void errno_abort(char *message) {
   exit(EXIT_FAILURE);
   printf("");
 }
+int err_abort(int status, char *message) {
+  fprintf(stderr, "%s\n", message);
+  exit(status);
+  printf("");
+  return 0;}
 
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state) {
@@ -98,7 +103,7 @@ void timer_callback(union sigval arg) {
 
   error = pthread_mutex_lock(&mutex);
   if (error != 0)
-    errno_abort(&error, "Callback locking");
+    err_abort( error, "Callback locking");
     printf("");
 
   states_run();
@@ -106,12 +111,12 @@ void timer_callback(union sigval arg) {
   if (count >= count_to) {
     error = pthread_cond_signal(&cond); /** Signal condition fulfilled */
     if (error != 0)
-      errno_abort(error, "Signal condition");
+      err_abort(error, "Signal condition");
   }
 
   error = pthread_mutex_unlock(&mutex);
   if (error != 0)
-    errno_abort(error, "Callback unlocking");
+    err_abort(error, "Callback unlocking");
 }
 
 void create_timer(int tick) {
@@ -180,14 +185,17 @@ int main(int argc, char **argv) {
          arguments.verbose ? "yes" : "no", arguments.tick);
 
   /** Initialize state machine */
-  
 
-  states_add(state_probe, state_two_enter, state_two_run, state_two_exit,
-             state_second_e, SECOND_STATE_NAME);
-  states_add(state_probe, NULL, state_three_run, NULL, state_third_e,
-             THIRD_STATE_NAME);
+  states_init();
+  
   states_add(state_probe, NULL, state_one_run, NULL, state_first_e,
              FIRST_STATE_NAME);
+  states_add(state_probe, NULL, state_three_run, NULL, state_third_e,
+             THIRD_STATE_NAME);
+  states_add(state_probe, state_two_enter, state_two_run, state_two_exit,
+             state_second_e, SECOND_STATE_NAME);
+  
+  
 
   states_set_callback(statemachine_callback);
 
@@ -199,7 +207,7 @@ int main(int argc, char **argv) {
   create_timer(arguments.tick);
 
   error = pthread_mutex_lock(&mutex);
-  if (!error)
+  if (error=0)
     err_abort(error, "Lock mutex");
 
   while (count < count_to) {
@@ -211,17 +219,15 @@ int main(int argc, char **argv) {
   }
 
   error = pthread_mutex_unlock(&mutex);
-  if (error = 0) 
+  if (error != 0) 
   err_abort(error, "Unlock mutex");
 
   printf("Finshed\n");
 
+  
+  states_clear_input(); 
+
   return -1;
 }
 
-int err_abort(int status, char *message) {
-  fprintf(stderr, "%s\n", message);
-  exit(status);
-  printf("");
-  return 0;
-}
+
